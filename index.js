@@ -10,4 +10,6 @@ app.use(express.json());
 app.use("/api", userRouter);
 app.use("/api", postRouter);
 
-app.listen(PORT, () => console.log(`server started, port: ${PORT}`));
+app.listen(process.env.PORT, () =>
+  console.log(`server started, port: ${PORT}`)
+);
