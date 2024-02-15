@@ -11,7 +11,7 @@ class ClothesController {
 
   async getAllClothes(req, res) {
     const clothes = await db.query(`select * from clothes`);
-    res.json(clothes.rows);
+    res.json("my response");
   }
 }
 
