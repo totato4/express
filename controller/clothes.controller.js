@@ -10,7 +10,7 @@ class ClothesController {
   }
 
   async getAllClothes(req, res) {
-    const clothes = await db.query(`SELECT * FROM clothes;`);
+    const clothes = await db.query(`select * from clothes`);
     res.json(clothes.rows);
   }
 }
