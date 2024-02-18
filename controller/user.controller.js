@@ -10,7 +10,7 @@ class UserController {
     res.json(rows[0]);
   }
   async getUsers(req, res) {
-    const { rows } = await db.query(`SELECT * FROM person`);
+    const { rows } = await db.query(`SELECT * FROM clothes`);
     res.json(rows);
   }
   async getOneUser(req, res) {
