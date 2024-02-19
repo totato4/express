@@ -8,125 +8,101 @@ class ClothesController {
       id = false,
       brand_c = false,
       color_c = false,
+      clothes_c = false,
       price_max = false,
       price_min = false,
+      search = false,
       page,
       limit = false,
     } = req.query;
 
-    let size_query;
-    if (!size_c) {
-      size_query = "SELECT * FROM clothes";
-    }
-    if (size_c) {
-      let size_array = size_c.split(",");
-      size_query =
-        "SELECT * FROM clothes where size_c in " +
-        "(" +
-        size_array.map((item) => "'" + item + "'") +
-        ")";
+    let select = " SELECT * FROM clothes ";
+    let where = " ";
+
+    if (req.query) {
+      where = " " + " WHERE " + " ";
     }
 
-    let human_query;
-    if (!human_c) {
-      human_query = " ";
-    } else {
-      let human_array = human_c.split(",");
-      human_query =
-        " INTERSECT " +
-        "SELECT * FROM clothes where human_c in " +
-        "(" +
-        human_array.map((item) => "'" + item + "'") +
-        ")";
-    }
+    let human_q =
+      human_c !== false
+        ? ` human_c IN (${human_c.split(",").map((item) => "'" + item + "'")}) `
+        : " human_c IN ('woman','man','kid') ";
 
-    let brand_query;
+    let size_q =
+      size_c !== false
+        ? ` AND size_c IN (${size_c
+            .split(",")
+            .map((item) => "'" + item + "'")}) `
+        : " ";
 
-    if (!brand_c) {
-      brand_query = " ";
-    } else {
-      let brand_array = brand_c.split(",");
-      brand_query =
-        " INTERSECT " +
-        "SELECT * FROM clothes where brand in " +
-        "(" +
-        brand_array.map((item) => "'" + item + "'") +
-        ")";
-    }
+    let brand_q = brand_c
+      ? ` AND brand IN (${brand_c.split(",").map((item) => "'" + item + "'")})`
+      : " ";
 
-    let color_query;
-    if (!color_c) {
-      color_query = " ";
-    } else {
-      let color_array = color_c.split(",");
-      color_query =
-        " INTERSECT " +
-        "SELECT * FROM clothes where color in " +
-        "(" +
-        color_array.map((item) => "'" + item + "'") +
-        ")";
-    }
+    let color_q = color_c
+      ? ` AND color IN (${color_c.split(",").map((item) => "'" + item + "'")})`
+      : " ";
+    let clothes_q = clothes_c
+      ? ` AND clothes_c IN (${clothes_c
+          .split(",")
+          .map((item) => "'" + item + "'")})`
+      : " ";
 
-    let price_max_query;
-    if (!price_max) {
-      price_max_query = " ";
-    } else {
-      price_max_query =
-        " INTERSECT " + `SELECT * FROM clothes where price <=` + price_max;
-    }
+    let price_max_q = price_max ? ` AND price <= ${price_max} ` : " ";
+    let price_min_q = price_min ? ` AND price >= ${price_min}` : " ";
 
-    let price_min_query;
-    if (!price_min) {
-      price_min_query = " ";
-    } else {
-      price_min_query =
-        " INTERSECT " +
-        `SELECT * FROM clothes where price >=` +
-        "'" +
-        price_min +
-        "'";
-    }
+    let search_q = search ? ` AND title iLIKE '%${search}%' ` : " ";
 
     let pag_query;
-    if (page !== false && limit !== false) {
-      pag_query =
-        " " +
-        "ORDER BY id OFFSET" +
-        " " +
-        page * limit +
-        " " +
-        " LIMIT " +
-        " " +
-        limit;
+    if (page !== false && limit !== false && page != 0 && limit !== 0) {
+      page = page - 1;
+      pag_query = " ORDER BY id OFFSET " + page * limit + " LIMIT " + limit;
     } else {
       pag_query = " " + "ORDER BY id OFFSET 0 LIMIT 12";
     }
 
-    // let count = " SELECT count(*) from clothes";
-
     const data = await db.query(
-      size_query +
-        human_query +
-        brand_query +
-        color_query +
-        price_max_query +
-        price_min_query +
+      select +
+        where +
+        human_q +
+        size_q +
+        brand_q +
+        color_q +
+        clothes_q +
+        price_max_q +
+        price_min_q +
+        search_q +
         pag_query
     );
 
     const totalCount = await db.query(
-      size_query +
-        human_query +
-        brand_query +
-        color_query +
-        price_max_query +
-        price_min_query
+      select +
+        where +
+        human_q +
+        size_q +
+        brand_q +
+        color_q +
+        price_max_q +
+        price_min_q
     );
 
-    let totalPages =
-      totalCount.rows.length == 0 ? 0 : totalCount.rows.length / limit;
-
-    res.json({ products: data.rows, totalCount: totalCount.rows.length });
+    let totalPages = Math.ceil(
+      totalCount.rows.length == 0 ? 0 : totalCount.rows.length / limit
+    );
+    console.log(
+      select +
+        where +
+        human_q +
+        size_q +
+        brand_q +
+        color_q +
+        clothes_q +
+        price_max_q +
+        price_min_q +
+        search_q +
+        pag_query
+    );
+    res.json({ product: data.rows, totalPages: totalPages });
   }
 }
 
