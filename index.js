@@ -5,12 +5,11 @@ const postRouter = require("./routes/post.routes");
 const clothesRouter = require("./routes/clothes.routes");
 
 const cors = require("cors");
-app.use(cors());
 
 const PORT = process.env.PORT || 5000;
 const url = process.env.POSTGRES_URL;
 const app = express();
-
+app.use(cors());
 app.use(express.json());
 app.use("/api", userRouter);
 app.use("/api", postRouter);
