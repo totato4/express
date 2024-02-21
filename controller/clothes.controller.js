@@ -88,9 +88,13 @@ class ClothesController {
         search_q
     );
 
-    let totalPages = Math.ceil(
-      totalCount.rows.length == 0 ? 0 : totalCount.rows.length / limit
-    );
+    let totalPages = limit
+      ? Math.ceil(
+          totalCount.rows.length == 0 ? 0 : totalCount.rows.length / limit
+        )
+      : Math.ceil(
+          totalCount.rows.length == 0 ? 0 : totalCount.rows.length / 20
+        );
     res.json({
       product: data.rows,
       totalPages,
