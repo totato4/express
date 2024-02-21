@@ -102,7 +102,7 @@ class ClothesController {
         search_q +
         pag_query
     );
-    res.json({ product: data.rows, totalPages: totalPages });
+    res.json({ product: data.rows, totalPages, totalCount });
   }
 }
 
