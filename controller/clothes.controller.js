@@ -89,20 +89,11 @@ class ClothesController {
     let totalPages = Math.ceil(
       totalCount.rows.length == 0 ? 0 : totalCount.rows.length / limit
     );
-    console.log(
-      select +
-        where +
-        human_q +
-        size_q +
-        brand_q +
-        color_q +
-        clothes_q +
-        price_max_q +
-        price_min_q +
-        search_q +
-        pag_query
-    );
-    res.json({ product: data.rows, totalPages, totalCount });
+    res.json({
+      product: data.rows,
+      totalPages,
+      totalCount: totalCount.rows.length,
+    });
   }
 }
 
