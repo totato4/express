@@ -82,8 +82,10 @@ class ClothesController {
         size_q +
         brand_q +
         color_q +
+        clothes_q +
         price_max_q +
-        price_min_q
+        price_min_q +
+        search_q
     );
 
     let totalPages = Math.ceil(
