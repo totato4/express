@@ -47,6 +47,9 @@ class ClothesController {
           .split(",")
           .map((item) => "'" + item + "'")})`
       : " ";
+    let id_q = id
+      ? ` AND id IN (${id.split(",").map((item) => "'" + item + "'")})`
+      : " ";
 
     let price_max_q = price_max ? ` AND price <= ${price_max} ` : " ";
     let price_min_q = price_min ? ` AND price >= ${price_min}` : " ";
@@ -69,6 +72,7 @@ class ClothesController {
         brand_q +
         color_q +
         clothes_q +
+        id_q +
         price_max_q +
         price_min_q +
         search_q +
@@ -83,6 +87,7 @@ class ClothesController {
         brand_q +
         color_q +
         clothes_q +
+        id_q +
         price_max_q +
         price_min_q +
         search_q
